@@ -82,6 +82,8 @@ public class GUI
             row = count / SIZE;
             col = count % SIZE;
         }
+
+        clearScreen();
     }
 
     private void goalAsk(WhiteSpacePuzzle puzzle)
@@ -120,13 +122,15 @@ public class GUI
         puzzle.setGoalState(goalState);
 
 
-
+clearScreen();
 
         //Choose algorithm
         final Algorithm algorithm = getAlgorithmInput(puzzle);
 
         //Create the AI tree given the algorithms we are using.
         AITree<WhiteSpacePuzzle.State> tree = new AITree<WhiteSpacePuzzle.State>(puzzle.getInitState(), puzzle.getGoalState(), algorithm, puzzle.getOperatorManager().getOperators());
+
+        clearScreen();
 
         System.out.println("\n\nStarting to compute...\n\n");
 
@@ -267,5 +271,10 @@ public class GUI
         else
             return s.substring(0, s.length() - 1);
 
+    }
+
+    public static void clearScreen() {
+        for(int i = 0; i < 50; i++)
+        System.out.println();
     }
 }
