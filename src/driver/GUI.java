@@ -16,6 +16,8 @@ public class GUI
 {
     //The state which we keep updating for input
     int[][] initialState;
+    int[][] goalState;
+
 
     //Current index and count of initial state
     private int count, row, col;
@@ -35,6 +37,7 @@ public class GUI
     {
         this.SIZE = size;
         this.initialState = new int[size][size];
+        this.goalState = new int[size][size];
         this.scanner = new Scanner(System.in);
 
 
@@ -43,6 +46,8 @@ public class GUI
             for (int j = 0; j < SIZE; j++)
             {
                 initialState[i][j] = -1; //initialize to negative number for better display
+                goalState[i][j] = -1;
+
             }
         }
     }
@@ -61,29 +66,61 @@ public class GUI
         return s;
     }
 
+    private void populateState(int[][] state)
+    {
+        //Complete the initial state
+        count = 0;
+        row = 0;
+        col = 0;
+        while (count <= 8)
+        {
+            System.out.println("-- Type Your 8 Puzzle --");
+
+            System.out.println(toString(state));
+            final int input = getInput();
+            sendInput(state, input);
+            row = count / SIZE;
+            col = count % SIZE;
+        }
+    }
+
+    private void goalAsk(WhiteSpacePuzzle puzzle)
+    {
+
+        System.out.println("--Goal State Below--");
+        System.out.println(puzzle.getGoalState().toString());
+        System.out.println("Do you want the default goal state? ('1' for yes OR '0' for no): ");
+
+        final int input = getInput(false);
+        if(input == 1)
+        {
+        }
+        else
+        {
+            populateState(goalState);
+        }
+    }
+
     /**
      * Sends the menu to the user
      */
     public void sendMenu()
     {
 
-        //Complete the initial state
-        while (count <= 8)
-        {
-            System.out.println("-- Type Your 8 Puzzle --");
 
-            System.out.println(toString());
-            final int input = getInput();
-            sendInput(input);
-            row = count / SIZE;
-            col = count % SIZE;
-        }
-
+        populateState(initialState);
 
         //Set the initial and goal states.
         WhiteSpacePuzzle puzzle = new WhiteSpacePuzzle(SIZE);
         puzzle.setInitialState(initialState);
         puzzle.setDefaultGoalState();
+
+        goalAsk(puzzle);
+
+        puzzle.setGoalState(goalState);
+
+
+
 
         //Choose algorithm
         final Algorithm algorithm = getAlgorithmInput(puzzle);
@@ -118,9 +155,7 @@ public class GUI
 
 
         }
-
         scanner.close();
-
     }
 
     /**
@@ -171,14 +206,28 @@ public class GUI
         return i;
     }
 
+    public int getInput(boolean message)
+    {
+        if(message)
+        {
+            System.out.println("'_'\tmeans numbers that have not yet been typed.");
+            System.out.println("'#'\tis the current number you are inputting.\n");
+            System.out.println("Type in a number (0 represents white-space): ");
+        }
+        final int i = scanner.nextInt();
+
+        count++;
+        return i;
+    }
+
     /**
      * Sets the input to the initial state.
      *
      * @param input The number to add
      */
-    public void sendInput(int input)
+    public void sendInput(int[][] state, int input)
     {
-        initialState[row][col] = input;
+        state[row][col] = input;
 
     }
 
@@ -187,8 +236,7 @@ public class GUI
      *
      * @return
      */
-    @Override
-    public String toString()
+    public String toString(int[][] state)
     {
 
         String s = "";
@@ -202,9 +250,9 @@ public class GUI
                     continue;
                 }
 
-                if (initialState[i][j] >= 0)
+                if (state[i][j] >= 0)
                 {
-                    s += initialState[i][j] + " ";
+                    s += state[i][j] + " ";
 
                 } else
                 {
