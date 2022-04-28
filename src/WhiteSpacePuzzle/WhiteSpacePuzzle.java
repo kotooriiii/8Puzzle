@@ -1,70 +1,124 @@
-import java.util.ArrayList;
-import java.util.List;
+package WhiteSpacePuzzle;
+
+import AI.AbstractState;
+import WhiteSpacePuzzle.operators.AIFunction;
+
+import java.util.HashMap;
 import java.util.function.Function;
-import java.util.regex.Pattern;
 
 public class WhiteSpacePuzzle
 {
+
+    //Square Size
     private int SIZE;
+
+    //Initial and Goal state
     private State initState;
+    private State goalState;
+
+    //Manages operators
     private OperatorManager operatorManager;
 
-    private static State goalState;
-
-
+    /**
+     * Constructor to create size of puzzle.
+     *
+     * @param size
+     */
     public WhiteSpacePuzzle(int size)
     {
         SIZE = size;
         this.operatorManager = new OperatorManager();
-        setGoalState();
+        setDefaultGoalState();
     }
 
+    /**
+     * Gets the size of the puzzle board
+     *
+     * @return
+     */
     public int getSize()
     {
         return SIZE;
     }
 
+    /**
+     * Sets the initial state.
+     *
+     * @param initState
+     */
     public void setInitialState(int[][] initState)
     {
         State state = new State(initState);
         this.initState = state;
     }
 
+    /**
+     * Gets the initial state
+     *
+     * @return
+     */
     public State getInitState()
     {
         return initState;
     }
 
-    private void setGoalState()
+    /**
+     * Sets the goal state
+     */
+    public void setDefaultGoalState()
     {
 
         int[][] localGoalState = new int[SIZE][SIZE];
 
-        int counter = 1;
-        for(int rows = 0; rows < SIZE; rows++)
+        int counter = 0;
+        for (int rows = 0; rows < SIZE; rows++)
         {
-            for(int cols = 0; cols < SIZE; cols++)
+            for (int cols = 0; cols < SIZE; cols++)
             {
                 localGoalState[rows][cols] = counter++;
             }
         }
         localGoalState[0][0] = State.SPACE;
-        goalState = new State(localGoalState);
+        this.goalState = new State(localGoalState, true);
     }
 
+    public void setGoalState(int[][] goalState)
+    {
+        State state = new State(goalState, true);
+        this.goalState = state;
+    }
+
+    /**
+     * Gets the goal state
+     *
+     * @return
+     */
+    public State getGoalState()
+    {
+        return goalState;
+    }
+
+    /**
+     * Returns the operator manager
+     *
+     * @return
+     */
     public OperatorManager getOperatorManager()
     {
         return operatorManager;
     }
 
-    public class State implements Comparable
+    public class State extends AbstractState
     {
         private int[][] state;
 
         int rowIndex = -1;
         int colIndex = -1;
 
-        private static final int SPACE = -1;
+        private static final int SPACE = 0;
+
+        private int manhattanDistanceCost;
+        private int misplacedTileCost;
 
         public State()
         {
@@ -83,6 +137,27 @@ public class WhiteSpacePuzzle
                 }
             }
             findSpaceIndexes();
+            setCosts();
+        }
+
+        private State(int[][] oldState, boolean isGoal)
+        {
+            this.state = new int[SIZE][SIZE];
+
+            for (int i = 0; i < SIZE; i++)
+            {
+                for (int j = 0; j < SIZE; j++)
+                {
+                    state[i][j] = oldState[i][j];
+                }
+            }
+            findSpaceIndexes();
+
+            if(!isGoal)
+            {
+                setCosts();
+
+            }
         }
 
         public int[][] getState()
@@ -94,14 +169,15 @@ public class WhiteSpacePuzzle
         {
             this.state = state;
             findSpaceIndexes();
+            setCosts();
 
         }
 
+        @Override
         public boolean isGoalState()
         {
-            return this.state.equals(goalState);
+            return this.state.equals(getGoalState());
         }
-
 
 
         public int getColIndex()
@@ -130,20 +206,73 @@ public class WhiteSpacePuzzle
             }
         }
 
+        private void setCosts()
+        {
+
+            int misplacedCost = 0;
+            int manhattanDistanceCost = 0;
+
+            for (int i = 0; i < SIZE; i++)
+            {
+                for (int j = 0; j < SIZE; j++)
+                {
+
+                    if (state[i][j] != SPACE)
+                    {
+                        if (state[i][j] != goalState.state[i][j])
+                        {
+                            misplacedCost++;
+
+
+                            findGoalState:
+                            for (int findGoalStateRow = 0; findGoalStateRow < SIZE; findGoalStateRow++)
+                            {
+                                for (int findGoalStateCol = 0; findGoalStateCol < SIZE; findGoalStateCol++)
+                                {
+                                    if (state[i][j] == goalState.state[findGoalStateRow][findGoalStateCol])
+                                    {
+
+                                        manhattanDistanceCost += Math.abs(findGoalStateRow - i) + Math.abs(findGoalStateCol - j);
+                                        break findGoalState;
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+
+            this.manhattanDistanceCost = manhattanDistanceCost;
+            this.misplacedTileCost = misplacedCost;
+
+
+        }
+
+        public int getMisplacedTileCost()
+        {
+            return this.misplacedTileCost;
+        }
+
+        public int getManhattanDistanceCost()
+        {
+            return manhattanDistanceCost;
+        }
+
         @Override
         public boolean equals(Object obj)
         {
-            if(obj != null)
+            if (obj != null)
             {
-                if(obj instanceof State)
+                if (obj instanceof State)
                 {
                     State otherState = (State) obj;
 
-                    for(int i = 0; i < SIZE; i++)
+                    for (int i = 0; i < SIZE; i++)
                     {
-                        for(int j = 0; j < SIZE; j++)
+                        for (int j = 0; j < SIZE; j++)
                         {
-                            if(this.state[i][j] != otherState.state[i][j])
+                            if (this.state[i][j] != otherState.state[i][j])
                                 return false;
                         }
                     }
@@ -172,53 +301,32 @@ public class WhiteSpacePuzzle
             else
                 return s.substring(0, s.length() - 1);
         }
-
-        @Override
-        public int compareTo(Object o2)
-        {
-
-
-            if (o2 != null)
-            {
-                if (o2 instanceof State)
-                {
-                    State s1 = (State) this;
-                    State s2 = (State) o2;
-
-
-//todo do we need this?
-                }
-
-
-            }
-
-            return 0;
-        }
     }
 
     public class OperatorManager
     {
-        private List<Function<State, State>> operators;
+        private HashMap<AIFunction<State>, Float> operators;
 
         public OperatorManager()
         {
-            this.operators = new ArrayList<>();
-            this.operators.add(getMoveLeftFunction());
-            this.operators.add(getMoveDownFunction());
-            this.operators.add(getMoveRightFunction());
-            this.operators.add(getMoveUpFunction());
+            this.operators = new HashMap<>();
+            this.operators.put(getMoveLeftFunction(), (float) 1);
+            this.operators.put(getMoveDownFunction(), (float) 1);
+            this.operators.put(getMoveRightFunction(), (float) 1);
+            this.operators.put(getMoveUpFunction(), (float) 1);
+
         }
 
-        public List<Function<State, State>> getOperators()
+        public HashMap<AIFunction<State>, Float> getOperators()
         {
             return operators;
         }
 
-        public Function<State, State> getMoveLeftFunction()
+        public AIFunction<State> getMoveLeftFunction()
         {
 
 
-            Function<State, State> function = new Function<State, State>()
+            AIFunction<State> function = new AIFunction<State>()
             {
                 @Override
                 public State apply(State state)
@@ -240,14 +348,16 @@ public class WhiteSpacePuzzle
                 }
             };
 
+            function.setName("MoveLeftFunction");
+
             return function;
         }
 
-        public Function<State, State> getMoveDownFunction()
+        public AIFunction<State> getMoveDownFunction()
         {
 
 
-            Function<State, State> function = new Function<State, State>()
+            AIFunction<State> function = new AIFunction<State>()
             {
                 @Override
                 public State apply(State state)
@@ -268,15 +378,16 @@ public class WhiteSpacePuzzle
                     }
                 }
             };
+            function.setName("MoveDownFunction");
 
             return function;
         }
 
-        public Function<State, State> getMoveRightFunction()
+        public AIFunction<State> getMoveRightFunction()
         {
 
 
-            Function<State, State> function = new Function<State, State>()
+            AIFunction<State> function = new AIFunction<State>()
             {
                 @Override
                 public State apply(State state)
@@ -297,15 +408,16 @@ public class WhiteSpacePuzzle
                     }
                 }
             };
+            function.setName("MoveRightFunction");
 
             return function;
         }
 
-        public Function<State, State> getMoveUpFunction()
+        public AIFunction<State> getMoveUpFunction()
         {
 
 
-            Function<State, State> function = new Function<State, State>()
+            AIFunction<State> function = new AIFunction<State>()
             {
                 @Override
                 public State apply(State state)
@@ -326,6 +438,7 @@ public class WhiteSpacePuzzle
                     }
                 }
             };
+            function.setName("MoveUpFunction");
 
             return function;
         }
