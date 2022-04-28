@@ -6,6 +6,10 @@ import AI.AITree;
 
 import java.util.Comparator;
 
+/**
+ * An abstract class that defines what an Algorithm is.
+ * @param <T>
+ */
 public abstract class Algorithm<T extends AITree<AbstractState>.Node> implements Comparator<T>
 {
 

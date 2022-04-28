@@ -4,6 +4,10 @@ import AI.AbstractState;
 import WhiteSpacePuzzle.WhiteSpacePuzzle;
 import AI.AITree;
 
+/**
+ * An informed heuristic search algorithm using A* with the Misplaced Tile Cost.
+ * @param <T> The AbstractNode which we need for comparisons (to choose what to expand next in the priority queue)
+ */
 public class AStarMisplacedTileCostAlgorithm<T extends AITree<AbstractState>.Node> extends Algorithm<T>
 {
 
@@ -25,7 +29,8 @@ public class AStarMisplacedTileCostAlgorithm<T extends AITree<AbstractState>.Nod
                 WhiteSpacePuzzle.State data1 = (WhiteSpacePuzzle.State) state1.getData();
                 WhiteSpacePuzzle.State data2 = (WhiteSpacePuzzle.State) state2.getData();
 
-                return (int) (((float) state1.getGetToThisStateOperator().getValue()) + data1.getMisplacedTileCost() - ((float) state2.getGetToThisStateOperator().getValue()) + data2.getMisplacedTileCost());
+                //definition of misplaced tile cost. a higher number means the first object (o1) is larger. a lower number means the second object (o2) is larger. if the value is 0, the objects are equal.
+                return (int) (((float) state1.getOperatorNeededToReachThis().getValue()) + data1.getMisplacedTileCost() - ((float) state2.getOperatorNeededToReachThis().getValue()) + data2.getMisplacedTileCost());
             }
 
         }
