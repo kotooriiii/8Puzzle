@@ -25,7 +25,7 @@ public class UniformCostSearch<T extends AITree<AbstractState>.Node> extends Alg
 
             //definition of uniform cost. a higher number means the first object (o1) is larger. a lower number means the second object (o2) is larger. if the value is 0, the objects are equal.
 
-            return (int) (((float) state1.getOperatorNeededToReachThis().getValue()) - ((float) state2.getOperatorNeededToReachThis().getValue()));
+            return (int) (  state1.getGCost()  - state2.getGCost() );
 
 
         }

@@ -30,7 +30,8 @@ public class AStarMisplacedTileCostAlgorithm<T extends AITree<AbstractState>.Nod
                 WhiteSpacePuzzle.State data2 = (WhiteSpacePuzzle.State) state2.getData();
 
                 //definition of misplaced tile cost. a higher number means the first object (o1) is larger. a lower number means the second object (o2) is larger. if the value is 0, the objects are equal.
-                return (int) (((float) state1.getOperatorNeededToReachThis().getValue()) + data1.getMisplacedTileCost() - ((float) state2.getOperatorNeededToReachThis().getValue()) + data2.getMisplacedTileCost());
+
+                return (int) ((state1.getGCost() + data1.getMisplacedTileCost()) - (state2.getGCost() + data2.getMisplacedTileCost()));
             }
 
         }

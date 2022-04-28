@@ -100,6 +100,8 @@ public class GUI
         else
         {
             populateState(goalState);
+            puzzle.setGoalState(goalState);
+
         }
     }
 
@@ -119,7 +121,6 @@ public class GUI
 
         goalAsk(puzzle);
 
-        puzzle.setGoalState(goalState);
 
 
 clearScreen();
@@ -128,7 +129,7 @@ clearScreen();
         final Algorithm algorithm = getAlgorithmInput(puzzle);
 
         //Create the AI tree given the algorithms we are using.
-        AITree<WhiteSpacePuzzle.State> tree = new AITree<WhiteSpacePuzzle.State>(puzzle.getInitState(), puzzle.getGoalState(), algorithm, puzzle.getOperatorManager().getOperators());
+        AITree<WhiteSpacePuzzle.State> tree = new AITree<WhiteSpacePuzzle.State>(puzzle.getInitState(), algorithm, puzzle.getOperatorManager().getOperators());
 
         clearScreen();
 
@@ -140,6 +141,8 @@ clearScreen();
         if (solution != null)
         {
             System.out.println("Solution found using " + algorithm.getClass().getSimpleName() + "!!!\n");
+            System.out.println("Size of Explored Set (# of visited nodes): " + tree.getVisitedNodes().size() + "\n");
+            System.out.println("Total # of visited nodes (counting duplicates): " + tree.getVisitedNumber() + "\n");
             System.out.println("Amount of Moves: " + solution.getMoves() + "\n");
             System.out.println(solution);
             FileWriter fw = null;
@@ -150,6 +153,9 @@ clearScreen();
 
 
                 fw = new FileWriter("solutions/" + puzzle.getClass().getSimpleName() + "-" + algorithm.getClass().getSimpleName() + "-" + getBasicInitialState(initialState) + ".txt", false);
+
+                fw.write("Size of Explored Set (# of visited nodes): " + tree.getVisitedNodes().size() + "\n");
+                fw.write("Total # of visited nodes (counting duplicates): " + tree.getVisitedNumber() + "\n");
                 fw.write("Amount of Moves: " + solution.getMoves() + "\n" + solution.toString());
                 fw.close();
             } catch (IOException e)

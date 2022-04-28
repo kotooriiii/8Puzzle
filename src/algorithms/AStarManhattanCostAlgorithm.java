@@ -30,7 +30,7 @@ public class AStarManhattanCostAlgorithm<T extends AITree<AbstractState>.Node> e
                 WhiteSpacePuzzle.State data2 = (WhiteSpacePuzzle.State) state2.getData();
 
                 //definition of manhattan cost. a higher number means the first object (o1) is larger. a lower number means the second object (o2) is larger. if the value is 0, the objects are equal.
-                return (int) (((float) state1.getOperatorNeededToReachThis().getValue()) + data1.getManhattanDistanceCost() - ((float) state2.getOperatorNeededToReachThis().getValue()) + data2.getManhattanDistanceCost());
+                return (int) ((state1.getGCost() + data1.getManhattanDistanceCost()) - (state2.getGCost() + data2.getManhattanDistanceCost()));
             }
 
         }
