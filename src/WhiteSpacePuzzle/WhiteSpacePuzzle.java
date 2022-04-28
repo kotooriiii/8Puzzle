@@ -1,10 +1,9 @@
 package WhiteSpacePuzzle;
 
 import AI.AbstractState;
-import WhiteSpacePuzzle.operators.AIFunction;
+import AI.AIFunction;
 
 import java.util.HashMap;
-import java.util.function.Function;
 
 public class WhiteSpacePuzzle
 {

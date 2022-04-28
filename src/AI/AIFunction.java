@@ -1,4 +1,4 @@
-package WhiteSpacePuzzle.operators;
+package AI;
 
 import AI.AbstractState;
 import WhiteSpacePuzzle.WhiteSpacePuzzle;

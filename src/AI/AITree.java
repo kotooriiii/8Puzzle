@@ -1,7 +1,5 @@
-package driver;
+package AI;
 
-import AI.AbstractState;
-import WhiteSpacePuzzle.operators.AIFunction;
 import algorithms.Algorithm;
 
 import java.util.*;

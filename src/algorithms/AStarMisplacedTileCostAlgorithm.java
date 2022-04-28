@@ -2,7 +2,7 @@ package algorithms;
 
 import AI.AbstractState;
 import WhiteSpacePuzzle.WhiteSpacePuzzle;
-import driver.AITree;
+import AI.AITree;
 
 public class AStarMisplacedTileCostAlgorithm<T extends AITree<AbstractState>.Node> extends Algorithm<T>
 {

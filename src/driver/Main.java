@@ -1,13 +1,15 @@
 package driver;
 
+import AI.AITree;
 import WhiteSpacePuzzle.WhiteSpacePuzzle;
-import algorithms.AStarManhattanCostAlgorithm;
-import algorithms.AStarMisplacedTileCostAlgorithm;
 import algorithms.UniformCostSearch;
+
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class Main
 {
-    public static void main(String[] args)
+    public static void main(String[] args) throws IOException
     {
         int SIZE = 3;
 
@@ -36,6 +38,9 @@ public class Main
             System.out.println("Solution found!!!\n");
             System.out.println("Amount of Moves: " + solution.getMoves() + "\n");
             System.out.println(solution);
+            FileWriter fw = new FileWriter("solution.txt", false);
+            fw.write(solution.toString());
+            fw.close();
 
         }
 
