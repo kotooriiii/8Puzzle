@@ -2,6 +2,7 @@ package WhiteSpacePuzzle;
 
 import AI.AbstractState;
 import AI.AIFunction;
+import org.omg.CORBA.PRIVATE_MEMBER;
 
 import java.util.HashMap;
 
@@ -128,6 +129,7 @@ public class WhiteSpacePuzzle
         //Variables the keep the cost of this state.
         private int manhattanDistanceCost;
         private int misplacedTileCost;
+        private int euclideanDistanceCost;
 
         /**
          * Default constructor that creates a 2D state array.
@@ -256,6 +258,7 @@ public class WhiteSpacePuzzle
 
             int misplacedCost = 0;
             int manhattanDistanceCost = 0;
+            int euclideanDistanceCost = 0;
 
             for (int i = 0; i < SIZE; i++)
             {
@@ -278,6 +281,7 @@ public class WhiteSpacePuzzle
                                     {
 
                                         manhattanDistanceCost += Math.abs(findGoalStateRow - i) + Math.abs(findGoalStateCol - j);
+                                        euclideanDistanceCost += Math.sqrt(Math.pow(findGoalStateRow - i, 2) + Math.pow(findGoalStateCol - j, 2));
                                         break findGoalState;
                                     }
                                 }
@@ -290,6 +294,7 @@ public class WhiteSpacePuzzle
 
             this.manhattanDistanceCost = manhattanDistanceCost;
             this.misplacedTileCost = misplacedCost;
+            this.euclideanDistanceCost = euclideanDistanceCost;
 
 
         }
@@ -310,6 +315,15 @@ public class WhiteSpacePuzzle
         public int getManhattanDistanceCost()
         {
             return manhattanDistanceCost;
+        }
+
+        /**
+         * Gets the euclidean distance cost
+         * @return
+         */
+        public int getEuclideanDistanceCost()
+        {
+            return euclideanDistanceCost;
         }
 
         /**

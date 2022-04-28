@@ -2,10 +2,7 @@ package driver;
 
 import AI.AITree;
 import WhiteSpacePuzzle.WhiteSpacePuzzle;
-import algorithms.AStarManhattanCostAlgorithm;
-import algorithms.AStarMisplacedTileCostAlgorithm;
-import algorithms.Algorithm;
-import algorithms.UniformCostSearch;
+import algorithms.*;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -143,7 +140,7 @@ clearScreen();
             System.out.println("Solution found using " + algorithm.getClass().getSimpleName() + "!!!\n");
             System.out.println("Size of Explored Set (# of visited nodes): " + tree.getVisitedNodes().size() + "\n");
             System.out.println("Total # of visited nodes (counting duplicates): " + tree.getVisitedNumber() + "\n");
-            System.out.println("Amount of Moves: " + solution.getMoves() + "\n");
+            System.out.println("Amount of Moves (depth): " + solution.getMoves() + "\n");
             System.out.println(solution);
             FileWriter fw = null;
             try
@@ -156,7 +153,7 @@ clearScreen();
 
                 fw.write("Size of Explored Set (# of visited nodes): " + tree.getVisitedNodes().size() + "\n");
                 fw.write("Total # of visited nodes (counting duplicates): " + tree.getVisitedNumber() + "\n");
-                fw.write("Amount of Moves: " + solution.getMoves() + "\n" + solution.toString());
+                fw.write("Amount of Moves (depth): " + solution.getMoves() + "\n" + solution.toString());
                 fw.close();
             } catch (IOException e)
             {
@@ -181,8 +178,9 @@ clearScreen();
         {
             System.out.println("-- Algorithm to Choose Menu -- ");
             System.out.println("[0]\t\tA* Manhattan Cost");
-            System.out.println("[1]\t\tA* Misplaced Tile Cost");
-            System.out.println("[2]\t\tUniform Cost");
+            System.out.println("[1]\t\tA* Euclidean Cost");
+            System.out.println("[2]\t\tA* Misplaced Tile Cost");
+            System.out.println("[3]\t\tUniform Cost");
             algorithmChosen = scanner.nextInt();
         }
 
@@ -191,8 +189,10 @@ clearScreen();
             case 0:
                 return new AStarManhattanCostAlgorithm(puzzle);
             case 1:
-                return new AStarMisplacedTileCostAlgorithm(puzzle);
+                return new AStarEuclideanCostAlgorithm(puzzle);
             case 2:
+                return new AStarMisplacedTileCostAlgorithm(puzzle);
+            case 3:
                 return new UniformCostSearch(puzzle);
             default:
                 return null;
