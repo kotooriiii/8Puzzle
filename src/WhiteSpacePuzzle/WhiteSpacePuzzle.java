@@ -72,7 +72,7 @@ public class WhiteSpacePuzzle
 
         int[][] localGoalState = new int[SIZE][SIZE];
 
-        int counter = 0;
+        int counter = 1;
         for (int rows = 0; rows < SIZE; rows++)
         {
             for (int cols = 0; cols < SIZE; cols++)
@@ -80,7 +80,7 @@ public class WhiteSpacePuzzle
                 localGoalState[rows][cols] = counter++;
             }
         }
-        localGoalState[0][0] = State.SPACE;
+        localGoalState[SIZE-1][SIZE-1] = State.SPACE;
         this.goalState = new State(localGoalState, true);
     }
 

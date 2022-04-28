@@ -28,6 +28,7 @@ public class GUI
 
     /**
      * The size of the puzzle.
+     *
      * @param size size of puzzle. size*size board
      */
     public GUI(int size)
@@ -44,6 +45,20 @@ public class GUI
                 initialState[i][j] = -1; //initialize to negative number for better display
             }
         }
+    }
+
+    public String getBasicInitialState(int[][] initialState)
+    {
+        String s = "";
+        for (int i = 0; i < SIZE; i++)
+        {
+            for (int j = 0; j < SIZE; j++)
+            {
+                s += initialState[i][j];
+            }
+
+        }
+        return s;
     }
 
     /**
@@ -91,8 +106,10 @@ public class GUI
             {
                 File file = new File("solutions");
                 file.mkdir();
-                fw = new FileWriter("solutions/" + puzzle.getClass().getSimpleName() + "-" + algorithm.getClass().getSimpleName() + ".txt", false);
-                fw.write(solution.toString());
+
+
+                fw = new FileWriter("solutions/" + puzzle.getClass().getSimpleName() + "-" + algorithm.getClass().getSimpleName() + "-" + getBasicInitialState(initialState) + ".txt", false);
+                fw.write("Amount of Moves: " + solution.getMoves() + "\n" + solution.toString());
                 fw.close();
             } catch (IOException e)
             {
@@ -108,13 +125,14 @@ public class GUI
 
     /**
      * Chooses the algorithm to compute the puzzle
+     *
      * @param puzzle
      * @return
      */
     public Algorithm getAlgorithmInput(WhiteSpacePuzzle puzzle)
     {
         int algorithmChosen = -1;
-        while(algorithmChosen < 0 || algorithmChosen > 2)
+        while (algorithmChosen < 0 || algorithmChosen > 2)
         {
             System.out.println("-- Algorithm to Choose Menu -- ");
             System.out.println("[0]\t\tA* Manhattan Cost");
@@ -138,6 +156,7 @@ public class GUI
 
     /**
      * Gets the next input for the next index in the initial state
+     *
      * @return
      */
     public int getInput()
@@ -154,6 +173,7 @@ public class GUI
 
     /**
      * Sets the input to the initial state.
+     *
      * @param input The number to add
      */
     public void sendInput(int input)
@@ -164,6 +184,7 @@ public class GUI
 
     /**
      * Displays the puzzle board
+     *
      * @return
      */
     @Override
