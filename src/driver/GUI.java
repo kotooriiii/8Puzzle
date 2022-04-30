@@ -174,7 +174,7 @@ public class GUI
     public Algorithm getAlgorithmInput(WhiteSpacePuzzle puzzle)
     {
         int algorithmChosen = -1;
-        while (algorithmChosen < 0 || algorithmChosen > 2)
+        while (algorithmChosen < 0 || algorithmChosen > 3)
         {
             System.out.println("-- Algorithm to Choose Menu -- ");
             System.out.println("[0]\t\tA* Manhattan Cost");
