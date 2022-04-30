@@ -15,6 +15,8 @@ public abstract class AIFunction<T extends AbstractState> implements Function<T,
         return name;
     }
 
+
+
     public void setName(String name)
     {
         this.name = name;

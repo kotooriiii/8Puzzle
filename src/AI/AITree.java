@@ -27,6 +27,8 @@ public class AITree<T extends AbstractState>
     private int visitedNumber = 0;
     //The solution node. We need this as a node so we can check what operators/states we made to get here.
     private Node solution = null;
+    // The max frontier queue size that was reached.
+    private int maxFrontierSize = 0;
 
     /**
      * A subclass of Tree to define what a node is (a container for the state).
@@ -265,6 +267,12 @@ public class AITree<T extends AbstractState>
         //Keep looping until the frontier is empty
         while (!frontier.isEmpty())
         {
+
+            if (maxFrontierSize < frontier.size())
+            {
+                maxFrontierSize = frontier.size();
+            }
+
             //Remove the next node in the frontier (remember this is a priority queue so our algorithm already took care of this!)
             final Node poll = frontier.poll();
 
@@ -364,5 +372,10 @@ public class AITree<T extends AbstractState>
     public HashSet<Node> getVisitedNodes()
     {
         return visitedNodes;
+    }
+
+    public int getMaxFrontierSize()
+    {
+        return maxFrontierSize;
     }
 }

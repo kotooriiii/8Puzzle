@@ -91,10 +91,9 @@ public class GUI
         System.out.println("Do you want the default goal state? ('1' for yes OR '0' for no): ");
 
         final int input = getInput(false);
-        if(input == 1)
+        if (input == 1)
         {
-        }
-        else
+        } else
         {
             populateState(goalState);
             puzzle.setGoalState(goalState);
@@ -119,8 +118,7 @@ public class GUI
         goalAsk(puzzle);
 
 
-
-clearScreen();
+        clearScreen();
 
         //Choose algorithm
         final Algorithm algorithm = getAlgorithmInput(puzzle);
@@ -140,6 +138,7 @@ clearScreen();
             System.out.println("Solution found using " + algorithm.getClass().getSimpleName() + "!!!\n");
             System.out.println("Size of Explored Set (# of visited nodes): " + tree.getVisitedNodes().size() + "\n");
             System.out.println("Total # of visited nodes (counting duplicates): " + tree.getVisitedNumber() + "\n");
+            System.out.println("Max Frontier Queue Size: " + tree.getMaxFrontierSize() + "\n");
             System.out.println("Amount of Moves (depth): " + solution.getMoves() + "\n");
             System.out.println(solution);
             FileWriter fw = null;
@@ -153,6 +152,7 @@ clearScreen();
 
                 fw.write("Size of Explored Set (# of visited nodes): " + tree.getVisitedNodes().size() + "\n");
                 fw.write("Total # of visited nodes (counting duplicates): " + tree.getVisitedNumber() + "\n");
+                fw.write("Max Frontier Queue Size: " + tree.getMaxFrontierSize() + "\n");
                 fw.write("Amount of Moves (depth): " + solution.getMoves() + "\n" + solution.toString());
                 fw.close();
             } catch (IOException e)
@@ -218,7 +218,7 @@ clearScreen();
 
     public int getInput(boolean message)
     {
-        if(message)
+        if (message)
         {
             System.out.println("'_'\tmeans numbers that have not yet been typed.");
             System.out.println("'#'\tis the current number you are inputting.\n");
@@ -279,8 +279,9 @@ clearScreen();
 
     }
 
-    public static void clearScreen() {
-        for(int i = 0; i < 50; i++)
-        System.out.println();
+    public static void clearScreen()
+    {
+        for (int i = 0; i < 50; i++)
+            System.out.println();
     }
 }

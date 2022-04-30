@@ -6,6 +6,7 @@ import WhiteSpacePuzzle.WhiteSpacePuzzle;
 
 /**
  * An informed heuristic search algorithm using A* with the Euclidean Cost.
+ *
  * @param <T> The AbstractNode which we need for comparisons (to choose what to expand next in the priority queue)
  */
 public class AStarEuclideanCostAlgorithm<T extends AITree<AbstractState>.Node> extends Algorithm<T>
