@@ -2,9 +2,9 @@ package WhiteSpacePuzzle;
 
 import AI.AbstractState;
 import AI.AIFunction;
-import org.omg.CORBA.PRIVATE_MEMBER;
 
 import java.util.HashMap;
+
 
 /**
  * Defines what the 8 Puzzle is. Defines operators and states! REQUIRED: Make abstract class
