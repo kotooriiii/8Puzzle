@@ -7,16 +7,17 @@ import org.omg.CORBA.PRIVATE_MEMBER;
 import java.util.HashMap;
 
 /**
- * Defines what the 8 Puzzle is. Defines operators and states!
+ * Defines what the 8 Puzzle is. Defines operators and states! REQUIRED: Make abstract class
  */
-public class WhiteSpacePuzzle
-{
+public class WhiteSpacePuzzle {
 
     //Square Size
     private int SIZE;
 
     //Initial and Goal state
     private State initState;
+
+
     private State goalState;
 
     //Manages operators
@@ -27,8 +28,7 @@ public class WhiteSpacePuzzle
      *
      * @param size
      */
-    public WhiteSpacePuzzle(int size)
-    {
+    public WhiteSpacePuzzle(int size) {
         SIZE = size;
         this.operatorManager = new OperatorManager();
         setDefaultGoalState();
@@ -39,8 +39,7 @@ public class WhiteSpacePuzzle
      *
      * @return
      */
-    public int getSize()
-    {
+    public int getSize() {
         return SIZE;
     }
 
@@ -49,8 +48,7 @@ public class WhiteSpacePuzzle
      *
      * @param initState
      */
-    public void setInitialState(int[][] initState)
-    {
+    public void setInitialState(int[][] initState) {
         State state = new State(initState);
         this.initState = state;
     }
@@ -60,33 +58,29 @@ public class WhiteSpacePuzzle
      *
      * @return
      */
-    public State getInitState()
-    {
+    public State getInitState() {
         return initState;
     }
 
     /**
      * Sets the default goal state
      */
-    public void setDefaultGoalState()
-    {
+    public void setDefaultGoalState() {
 
         int[][] localGoalState = new int[SIZE][SIZE];
 
         int counter = 1;
-        for (int rows = 0; rows < SIZE; rows++)
-        {
-            for (int cols = 0; cols < SIZE; cols++)
-            {
+        for (int rows = 0; rows < SIZE; rows++) {
+            for (int cols = 0; cols < SIZE; cols++) {
                 localGoalState[rows][cols] = counter++;
             }
         }
-        localGoalState[SIZE-1][SIZE-1] = State.SPACE;
+        localGoalState[SIZE - 1][SIZE - 1] = State.SPACE;
         this.goalState = new State(localGoalState, true);
     }
 
-    public void setGoalState(int[][] goalState)
-    {
+
+    public void setGoalState(int[][] goalState) {
         State state = new State(goalState, true);
         this.goalState = state;
     }
@@ -96,8 +90,7 @@ public class WhiteSpacePuzzle
      *
      * @return
      */
-    public State getGoalState()
-    {
+    public State getGoalState() {
         return goalState;
     }
 
@@ -106,16 +99,14 @@ public class WhiteSpacePuzzle
      *
      * @return
      */
-    public OperatorManager getOperatorManager()
-    {
+    public OperatorManager getOperatorManager() {
         return operatorManager;
     }
 
     /**
      * Defines the states for the puzzle. The state object is used to track what state we are on in the 8 puzzle.
      */
-    public class State extends AbstractState
-    {
+    public class State extends AbstractState {
         //The current state
         private int[][] state;
 
@@ -134,23 +125,20 @@ public class WhiteSpacePuzzle
         /**
          * Default constructor that creates a 2D state array.
          */
-        public State()
-        {
+        public State() {
             this.state = new int[SIZE][SIZE];
         }
 
         /**
          * Copies the oldState (deep copy, no references)
+         *
          * @param oldState The old state. Use this node to copy the parent nodes without worry of reference copy object.
          */
-        public State(int[][] oldState)
-        {
+        public State(int[][] oldState) {
             this.state = new int[SIZE][SIZE];
 
-            for (int i = 0; i < SIZE; i++)
-            {
-                for (int j = 0; j < SIZE; j++)
-                {
+            for (int i = 0; i < SIZE; i++) {
+                for (int j = 0; j < SIZE; j++) {
                     state[i][j] = oldState[i][j];
                 }
             }
@@ -160,43 +148,40 @@ public class WhiteSpacePuzzle
 
         /**
          * Creates the goal state
+         *
          * @param oldState The goal state
-         * @param isGoal true to set the goal state (and skip costs), false to not set the goal state
+         * @param isGoal   true to set the goal state (and skip costs), false to not set the goal state
          */
-        private State(int[][] oldState, boolean isGoal)
-        {
+        private State(int[][] oldState, boolean isGoal) {
             this.state = new int[SIZE][SIZE];
 
-            for (int i = 0; i < SIZE; i++)
-            {
-                for (int j = 0; j < SIZE; j++)
-                {
+            for (int i = 0; i < SIZE; i++) {
+                for (int j = 0; j < SIZE; j++) {
                     state[i][j] = oldState[i][j];
                 }
             }
             findSpaceIndexes();
 
-            if(!isGoal)
-            {
+            if (!isGoal) {
                 setCosts();
             }
         }
 
         /**
          * Returns this state data
+         *
          * @return the 2D state array
          */
-        public int[][] getState()
-        {
+        public int[][] getState() {
             return state;
         }
 
         /**
          * Sets the state
+         *
          * @param state the state data
          */
-        public void setState(int[][] state)
-        {
+        public void setState(int[][] state) {
             this.state = state;
             findSpaceIndexes();
             setCosts();
@@ -205,43 +190,39 @@ public class WhiteSpacePuzzle
 
         /**
          * Checks if this state is the goal state
+         *
          * @return true if this is the goal state, false otherwise
          */
         @Override
-        public boolean isGoalState()
-        {
+        public boolean isGoalState() {
             return equals(getGoalState());
         }
 
         /**
          * The column index of the white-space.
+         *
          * @return an integer that is 0 or higher that represents the column index of the white space in the 2D array.
          */
-        public int getColIndex()
-        {
+        public int getColIndex() {
             return colIndex;
         }
 
         /**
          * The row index of the white-space.
+         *
          * @return an integer that is 0 or higher that represents the row index of the white space in the 2D array.
          */
-        public int getRowIndex()
-        {
+        public int getRowIndex() {
             return rowIndex;
         }
 
         /**
          * Finds the white space in the 2D array which updates col index and row index.
          */
-        private void findSpaceIndexes()
-        {
-            for (int i = 0; i < SIZE; i++)
-            {
-                for (int j = 0; j < SIZE; j++)
-                {
-                    if (state[i][j] == SPACE)
-                    {
+        private void findSpaceIndexes() {
+            for (int i = 0; i < SIZE; i++) {
+                for (int j = 0; j < SIZE; j++) {
+                    if (state[i][j] == SPACE) {
                         rowIndex = i;
                         colIndex = j;
                         return;
@@ -253,17 +234,14 @@ public class WhiteSpacePuzzle
         /**
          * Sets the costs for misplaced tiles and manhattan distance to reduce computation time. (increases memory space in return)
          */
-        private void setCosts()
-        {
+        private void setCosts() {
 
             int misplacedCost = 0;
             int manhattanDistanceCost = 0;
             int euclideanDistanceCost = 0;
 
-            for (int i = 0; i < SIZE; i++)
-            {
-                for (int j = 0; j < SIZE; j++)
-                {
+            for (int i = 0; i < SIZE; i++) {
+                for (int j = 0; j < SIZE; j++) {
 
                     if (state[i][j] != SPACE) //If this is not the space
                     {
@@ -272,13 +250,11 @@ public class WhiteSpacePuzzle
                             misplacedCost++; //This tile is misplaced, increase the cost by 1.
 
 
-                            findGoalState: //This loop computes the manhattan distance to find the goal state.
-                            for (int findGoalStateRow = 0; findGoalStateRow < SIZE; findGoalStateRow++)
-                            {
-                                for (int findGoalStateCol = 0; findGoalStateCol < SIZE; findGoalStateCol++)
-                                {
-                                    if (state[i][j] == goalState.state[findGoalStateRow][findGoalStateCol])
-                                    {
+                            findGoalState:
+                            //This loop computes the manhattan distance to find the goal state.
+                            for (int findGoalStateRow = 0; findGoalStateRow < SIZE; findGoalStateRow++) {
+                                for (int findGoalStateCol = 0; findGoalStateCol < SIZE; findGoalStateCol++) {
+                                    if (state[i][j] == goalState.state[findGoalStateRow][findGoalStateCol]) {
 
                                         manhattanDistanceCost += Math.abs(findGoalStateRow - i) + Math.abs(findGoalStateCol - j);
                                         euclideanDistanceCost += Math.sqrt(Math.pow(findGoalStateRow - i, 2) + Math.pow(findGoalStateCol - j, 2));
@@ -301,49 +277,45 @@ public class WhiteSpacePuzzle
 
         /**
          * Gets the misplaced tile cost
+         *
          * @return the cost of misplaced tiles
          */
-        public int getMisplacedTileCost()
-        {
+        public int getMisplacedTileCost() {
             return this.misplacedTileCost;
         }
 
         /**
          * Gets the manhattan distance cost
+         *
          * @return the manhattan distance cost
          */
-        public int getManhattanDistanceCost()
-        {
+        public int getManhattanDistanceCost() {
             return manhattanDistanceCost;
         }
 
         /**
          * Gets the euclidean distance cost
+         *
          * @return
          */
-        public int getEuclideanDistanceCost()
-        {
+        public int getEuclideanDistanceCost() {
             return euclideanDistanceCost;
         }
 
         /**
          * Defines the equal operator by comparing the elements in the indexes i,j.
+         *
          * @param obj the object in comparison
          * @return true if equal, false otherwise
          */
         @Override
-        public boolean equals(Object obj)
-        {
-            if (obj != null)
-            {
-                if (obj instanceof State)
-                {
+        public boolean equals(Object obj) {
+            if (obj != null) {
+                if (obj instanceof State) {
                     State otherState = (State) obj;
 
-                    for (int i = 0; i < SIZE; i++)
-                    {
-                        for (int j = 0; j < SIZE; j++)
-                        {
+                    for (int i = 0; i < SIZE; i++) {
+                        for (int j = 0; j < SIZE; j++) {
                             if (this.state[i][j] != otherState.state[i][j])
                                 return false;
                         }
@@ -358,15 +330,13 @@ public class WhiteSpacePuzzle
 
         /**
          * Prints the state data in a readable format
+         *
          * @return
          */
-        public String toString()
-        {
+        public String toString() {
             String s = "";
-            for (int i = 0; i < SIZE; i++)
-            {
-                for (int j = 0; j < SIZE; j++)
-                {
+            for (int i = 0; i < SIZE; i++) {
+                for (int j = 0; j < SIZE; j++) {
                     s += state[i][j] + " ";
                 }
                 s += "\n";
@@ -382,16 +352,14 @@ public class WhiteSpacePuzzle
     /**
      * Defines the manager which handles all operators and their costs
      */
-    public class OperatorManager
-    {
+    public class OperatorManager {
         //A map that contains the function and their cost
         private HashMap<AIFunction<State>, Float> operators;
 
         /**
          * Default constructor that adds operators and their costs
          */
-        public OperatorManager()
-        {
+        public OperatorManager() {
             this.operators = new HashMap<>();
             this.operators.put(getMoveLeftFunction(), (float) 1);
             this.operators.put(getMoveDownFunction(), (float) 1);
@@ -402,40 +370,36 @@ public class WhiteSpacePuzzle
 
         /**
          * Gets the operators in a map (function and cost)
+         *
          * @return
          */
-        public HashMap<AIFunction<State>, Float> getOperators()
-        {
+        public HashMap<AIFunction<State>, Float> getOperators() {
             return operators;
         }
 
         /**
          * The MoveLeft operator
+         *
          * @return the function which defines what moving left does
          */
-        public AIFunction<State> getMoveLeftFunction()
-        {
+        public AIFunction<State> getMoveLeftFunction() {
 
 
-            AIFunction<State> function = new AIFunction<State>()
-            {
+            AIFunction<State> function = new AIFunction<State>() {
                 @Override
-                public State apply(State state)
-                {
+                public State apply(State state) {
                     final int[][] oldStateArr = state.getState();
                     State newState = new State(oldStateArr);
                     int[][] newStateArr = newState.getState();
 
                     //If this is the most far left you can go
-                    if (newState.getColIndex() != 0)
-                    {
+                    if (newState.getColIndex() != 0) {
                         //Update the array by swapping white space with the other value
                         newStateArr[newState.getRowIndex()][newState.getColIndex()] = newStateArr[newState.getRowIndex()][newState.getColIndex() - 1];
                         newStateArr[newState.getRowIndex()][newState.getColIndex() - 1] = State.SPACE;
                         return newState;
 
-                    } else
-                    {
+                    } else {
                         return null;
                     }
                 }
@@ -448,31 +412,27 @@ public class WhiteSpacePuzzle
 
         /**
          * The MoveDown operator
+         *
          * @return the function which defines what moving down does
          */
-        public AIFunction<State> getMoveDownFunction()
-        {
+        public AIFunction<State> getMoveDownFunction() {
 
 
-            AIFunction<State> function = new AIFunction<State>()
-            {
+            AIFunction<State> function = new AIFunction<State>() {
                 @Override
-                public State apply(State state)
-                {
+                public State apply(State state) {
                     final int[][] oldStateArr = state.getState();
                     State newState = new State(oldStateArr);
                     int[][] newStateArr = newState.getState();
 
                     //If this is the most far down you can go
-                    if (newState.getRowIndex() != SIZE - 1)
-                    {
+                    if (newState.getRowIndex() != SIZE - 1) {
                         //Update the array by swapping white space with the other value
                         newStateArr[newState.getRowIndex()][newState.getColIndex()] = newStateArr[newState.getRowIndex() + 1][newState.getColIndex()];
                         newStateArr[newState.getRowIndex() + 1][newState.getColIndex()] = State.SPACE;
                         return newState;
 
-                    } else
-                    {
+                    } else {
                         return null;
                     }
                 }
@@ -484,31 +444,27 @@ public class WhiteSpacePuzzle
 
         /**
          * The MoveRight operator
+         *
          * @return the function which defines what moving right does
          */
-        public AIFunction<State> getMoveRightFunction()
-        {
+        public AIFunction<State> getMoveRightFunction() {
 
 
-            AIFunction<State> function = new AIFunction<State>()
-            {
+            AIFunction<State> function = new AIFunction<State>() {
                 @Override
-                public State apply(State state)
-                {
+                public State apply(State state) {
                     final int[][] oldStateArr = state.getState();
                     State newState = new State(oldStateArr);
                     int[][] newStateArr = newState.getState();
 
                     //If this is the most far right you can go
-                    if (newState.getColIndex() != SIZE - 1)
-                    {
+                    if (newState.getColIndex() != SIZE - 1) {
                         //Update the array by swapping white space with the other value
                         newStateArr[newState.getRowIndex()][newState.getColIndex()] = newStateArr[newState.getRowIndex()][newState.getColIndex() + 1];
                         newStateArr[newState.getRowIndex()][newState.getColIndex() + 1] = State.SPACE;
                         return newState;
 
-                    } else
-                    {
+                    } else {
                         return null;
                     }
                 }
@@ -520,31 +476,27 @@ public class WhiteSpacePuzzle
 
         /**
          * The MoveUp operator
+         *
          * @return the function which defines what moving up does
          */
-        public AIFunction<State> getMoveUpFunction()
-        {
+        public AIFunction<State> getMoveUpFunction() {
 
 
-            AIFunction<State> function = new AIFunction<State>()
-            {
+            AIFunction<State> function = new AIFunction<State>() {
                 @Override
-                public State apply(State state)
-                {
+                public State apply(State state) {
                     final int[][] oldStateArr = state.getState();
                     State newState = new State(oldStateArr);
                     int[][] newStateArr = newState.getState();
 
                     //If this is the most far up you can go
-                    if (newState.getRowIndex() != 0)
-                    {
+                    if (newState.getRowIndex() != 0) {
                         //Update the array by swapping white space with the other value
                         newStateArr[newState.getRowIndex()][newState.getColIndex()] = newStateArr[newState.getRowIndex() - 1][newState.getColIndex()];
                         newStateArr[newState.getRowIndex() - 1][newState.getColIndex()] = State.SPACE;
                         return newState;
 
-                    } else
-                    {
+                    } else {
                         return null;
                     }
                 }
